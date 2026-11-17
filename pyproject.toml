@@ -1,0 +1,27 @@
+[project]
+name = "rbxecon"
+version = "0.1.0"
+description = "Simulate the economy of a Roblox tycoon (pacing, dead zones, targets) and export the same numbers to Luau."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.12"
+dependencies = []
+keywords = ["roblox", "luau", "tycoon", "game-design", "economy", "balancing", "simulation"]
+classifiers = [
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Games/Entertainment",
+]
+
+[project.scripts]
+rbxecon = "rbxecon.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["uv_build>=0.11.32,<0.12.0"]
+build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
