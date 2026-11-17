@@ -1,0 +1,112 @@
+# rbxecon example: a small gym tycoon.
+# These numbers are EXAMPLES. Replace them with the real values of your game.
+#
+# Run:   rbxecon sim example.toml
+#        rbxecon check example.toml
+#        rbxecon luau example.toml -o Economy.luau
+
+[economy]
+start_cash  = 100
+base_income = 2        # money per second that always comes in (memberships...)
+round_costs = true     # costs are rounded like math.floor(x + 0.5) in the game
+
+[analysis]
+max_wait_minutes = 3   # a wait longer than this is reported as a "dead zone"
+
+# ---- Items ---------------------------------------------------------------
+# cost         price of the FIRST copy
+# cost_growth  each extra copy costs cost * cost_growth ^ copies_owned
+# max          how many copies can be bought (default 1)
+# income       money per second per copy
+# group        income group (so a multiplier can target only some items)
+# requires     what must be owned first
+
+[[item]]
+name = "Treadmill"
+cost = 50
+income = 1
+cost_growth = 1.15
+max = 10
+group = "machines"
+
+[[item]]
+name = "Dumbbell Rack"
+cost = 120
+income = 2.5
+cost_growth = 1.15
+max = 5
+group = "machines"
+
+[[item]]
+name = "Bench"
+cost = 400
+income = 8
+cost_growth = 1.18
+max = 5
+group = "machines"
+requires = [{ item = "Dumbbell Rack", count = 1 }]
+
+[[item]]
+name = "Squat Rack"
+cost = 3000
+income = 30
+cost_growth = 1.2
+max = 4
+group = "machines"
+requires = [{ item = "Bench", count = 2 }]
+
+[[item]]
+name = "Cable Station"
+cost = 40000
+income = 110
+cost_growth = 1.2
+max = 4
+group = "machines"
+requires = [{ item = "Squat Rack", count = 2 }]
+
+# A pure unlock: it earns nothing itself, but other items need it.
+[[item]]
+name = "Locker Room"
+cost = 800
+requires = [{ item = "Treadmill", count = 5 }]
+
+[[item]]
+name = "Juice Bar"
+cost = 2500
+income = 15
+group = "services"
+requires = [{ item = "Treadmill", count = 3 }]
+
+[[item]]
+name = "Sauna"
+cost = 120000
+income = 300
+group = "services"
+requires = [{ item = "Locker Room", count = 1 }, { item = "Squat Rack", count = 1 }]
+
+# A multiplier: each copy multiplies ALL income by 1.25.
+[[item]]
+name = "Marketing Campaign"
+kind = "multiplier"
+multiplier = 1.25
+cost = 20000
+cost_growth = 4
+max = 3
+
+# ---- Pacing targets ------------------------------------------------------
+# "I want the player to own this after about N minutes."
+# Checked for every strategy; tolerance 0.25 means +/- 25 %.
+
+[[target]]
+item = "Bench"
+count = 1
+minutes = 4
+
+[[target]]
+item = "Sauna"
+minutes = 20
+
+[[target]]
+item = "*"          # everything bought
+minutes = 25
+tolerance = 0.3
